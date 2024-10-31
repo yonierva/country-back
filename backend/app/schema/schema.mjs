@@ -2,10 +2,11 @@ import z from "zod";
 
 const countrySchema = z.object({
   name: z.string(),
+  img: z.string().url(),
   age: z.number().int(),
   population: z.string(),
   region: z.enum([
-    "norteamarica",
+    "norteamerica",
     "suramerica",
     "europa",
     "africa",

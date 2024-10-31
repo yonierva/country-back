@@ -3,12 +3,13 @@ const app = express();
 import { valideCountry, parcialCountry } from "./schema/schema.mjs";
 import { getMongodb } from "./schema/mongo.mjs";
 import { date } from "zod";
+import cors from "cors"
 // import { createRequire } from "node:module";
 // const require = createRequire(import.meta.url);
 // const countrys = require("../../json/country.json");
 
 app.disable("x-powered-by");
-
+app.use(cors())
 app.use(json());
 
 // la conecion con mongodb y obetencion de la colletion
@@ -27,7 +28,7 @@ const getCountrys = async () => {
 // para filtrar movies
 app.get("/country", async (req, res) => {
   // esto arregla el problema de cors
-  res.header("Access-Control-Allow-Origin", "*");
+  // res.header("Access-Control-Allow-Origin", "*");
   const { region } = req.query;
   const countrys = await getCountrys();
   if (region) {
@@ -59,7 +60,7 @@ app.post("/country", async (req, res) => {
   const countrys = await collection.find().toArray();
 
   if (valide.error) {
-    res.status(404).json({ error: JSON.parse(valide.error.message) });
+    res.status(404).json({ message: JSON.parse(valide.error.message) });
   }
 
   // se puede asi
@@ -108,6 +109,7 @@ app.patch("/country/:id", async (req, res) => {
 
 // para borrar un pais
 app.delete("/country/:id", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const { id } = req.params;
   const database = await getMongodb();
 
